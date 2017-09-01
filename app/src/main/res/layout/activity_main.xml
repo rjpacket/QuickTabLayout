@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.taovo.rjp.quicktablayout.MainActivity"
+    >
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:indicatorWidth="20dp"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:indicatorWidth="20dp"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabWidth="80dp"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabWidth="80dp"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+    <com.taovo.rjp.quicktablayout.QuickTabLayout
+        android:id="@+id/quick_tab_layout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabWidth="80dp"
+        app:indicatorWidth="20dp"
+        >
+
+    </com.taovo.rjp.quicktablayout.QuickTabLayout>
+
+</LinearLayout>
