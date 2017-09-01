@@ -1,5 +1,6 @@
 package com.taovo.rjp.quicktablayout;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -32,7 +33,6 @@ public class QuickTabLayout extends LinearLayout {
 
     private List<Tab> mTabs;
     private LinearLayout llTabContainer;
-    private LinearLayout llIndicatorContainer;
     private View indicatorView;
     private int screenWidth;
     /**
@@ -54,7 +54,6 @@ public class QuickTabLayout extends LinearLayout {
     private int txtSize;
     private int selectedIndex = 0;
     private MyHorizontalScrollView horizontalScrollView;
-    private MyHorizontalScrollView indicatorScrollView;
 
     public QuickTabLayout(Context context) {
         super(context);
@@ -75,15 +74,24 @@ public class QuickTabLayout extends LinearLayout {
         mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.layout_quick_tab_layout, this);
         horizontalScrollView = (MyHorizontalScrollView) findViewById(R.id.horizontal_scroll_view);
-        indicatorScrollView = (MyHorizontalScrollView) findViewById(R.id.indicator_scroll_view);
         llTabContainer = (LinearLayout) findViewById(R.id.ll_tab_container);
-        llIndicatorContainer = (LinearLayout) findViewById(R.id.ll_indicator_container);
         indicatorView = findViewById(R.id.indicator);
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         horizontalScrollView.setOnHorizontalScrollListener(new MyHorizontalScrollView.OnHorizontalScrollListener() {
             @Override
             public void onScroll(int scrollX, int scrollY) {
-                indicatorScrollView.scrollTo(scrollX, 0);
+                LinearLayout.LayoutParams layoutParams = (LayoutParams) indicatorView.getLayoutParams();
+                Tab tab = mTabs.get(selectedIndex);
+                switch (indicatorMode){
+                    case EQUAL_TAB:
+                        layoutParams.setMargins(tab.getTabLeft() - scrollX, 0, 0, 0);
+                        break;
+                    case EQUAL_CONTENT:
+                    case EQUAL_VALUE:
+                        layoutParams.setMargins(tab.getIndicatorLeft() - scrollX, 0, 0, 0);
+                        break;
+                }
+                indicatorView.setLayoutParams(layoutParams);
             }
         });
 
@@ -140,6 +148,10 @@ public class QuickTabLayout extends LinearLayout {
                         tab.setTabLeft(i * textViewWidth);
                         tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
                     }
+                    if(checkTabTotalWidth()){
+                        setTabs(mTabs);
+                        return;
+                    }
                     break;
                 case EQUAL:
                     textViewWidth = tabWidth;
@@ -150,17 +162,30 @@ public class QuickTabLayout extends LinearLayout {
                         tab.setTabLeft(i * textViewWidth);
                         tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
                     }
+                    if(checkTabTotalWidth()){
+                        setTabs(mTabs);
+                        return;
+                    }
                     break;
             }
-            int totalWidth = 0;
-            for (Tab tab : tabs) {
-                totalWidth += tab.getTabWidth();
-            }
-            ViewGroup.LayoutParams layoutParams = llIndicatorContainer.getLayoutParams();
-            layoutParams.width = totalWidth;
-            llIndicatorContainer.setLayoutParams(layoutParams);
             setSelectState();
         }
+    }
+
+    /**
+     * 检查总长度
+     * @return
+     */
+    private boolean checkTabTotalWidth() {
+        int totalWidth = 0;
+        for (Tab tab : mTabs) {
+            totalWidth += tab.getTabWidth();
+        }
+        if(totalWidth < screenWidth){
+            tabMode = EQUANT;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -183,7 +208,7 @@ public class QuickTabLayout extends LinearLayout {
                 layoutParams.setMargins(tab.getIndicatorLeft(), 0, 0, 0);
                 break;
             case EQUAL_VALUE:
-                if(indicatorWidth > tab.getTabWidth()){
+                if (indicatorWidth > tab.getTabWidth()) {
                     indicatorWidth = tab.getTabWidth();
                 }
                 layoutParams.width = indicatorWidth;
@@ -234,11 +259,10 @@ public class QuickTabLayout extends LinearLayout {
                     preTextView.setTextColor(txtUnselectedColor);
                     selectedIndex = (Integer) v.getTag();
                     setSelectState();
-                    checkScroll();
                     indicatorAnim(mTabs.get(selectedIndex), preTab);
                 }
             });
-            switch (indicatorMode){
+            switch (indicatorMode) {
                 case EQUAL_TAB:
                 case EQUAL_CONTENT:
                     paint.setTextSize(textView.getTextSize());
@@ -268,16 +292,17 @@ public class QuickTabLayout extends LinearLayout {
      * 下面小角标的动画
      */
     private void indicatorAnim(Tab currentTab, Tab previousTab) {
+        int scrollX = horizontalScrollView.getScrollX();
         int startValue = 0, endValue = 0;
-        switch (indicatorMode){
+        switch (indicatorMode) {
             case EQUAL_TAB:
-                startValue = previousTab.getTabLeft();
-                endValue = currentTab.getTabLeft();
+                startValue = previousTab.getTabLeft() - scrollX;
+                endValue = currentTab.getTabLeft() - scrollX;
                 break;
             case EQUAL_CONTENT:
             case EQUAL_VALUE:
-                startValue = previousTab.getIndicatorLeft();
-                endValue = currentTab.getIndicatorLeft();
+                startValue = previousTab.getIndicatorLeft() - scrollX;
+                endValue = currentTab.getIndicatorLeft() - scrollX;
                 break;
         }
         ObjectAnimator anim = ObjectAnimator.ofInt(indicatorView, "rjp", startValue, endValue).setDuration(300);
@@ -288,6 +313,27 @@ public class QuickTabLayout extends LinearLayout {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) indicatorView.getLayoutParams();
                 layoutParams.setMargins((Integer) animation.getAnimatedValue(), 0, 0, 0);
                 indicatorView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                checkScroll();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
     }
@@ -335,7 +381,6 @@ public class QuickTabLayout extends LinearLayout {
      *
      * @param context 上下文
      * @param dpValue 单位dip的数据
-     * @return
      */
     public int dp2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
