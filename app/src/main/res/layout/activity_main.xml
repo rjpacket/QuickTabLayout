@@ -30,7 +30,7 @@
         android:id="@+id/quick_tab_layout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:indicatorWidth="20dp"
+        app:indicatorWidth="10dp"
         >
 
     </com.taovo.rjp.quicktablayout.QuickTabLayout>
@@ -55,7 +55,7 @@
         android:id="@+id/quick_tab_layout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:indicatorWidth="20dp"
+        app:indicatorWidth="10dp"
         >
 
     </com.taovo.rjp.quicktablayout.QuickTabLayout>
@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabWidth="80dp"
-        app:indicatorWidth="20dp"
+        app:indicatorWidth="10dp"
         >
 
     </com.taovo.rjp.quicktablayout.QuickTabLayout>

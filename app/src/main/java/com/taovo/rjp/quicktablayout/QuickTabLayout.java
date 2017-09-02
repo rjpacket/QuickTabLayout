@@ -82,7 +82,7 @@ public class QuickTabLayout extends LinearLayout {
             public void onScroll(int scrollX, int scrollY) {
                 LinearLayout.LayoutParams layoutParams = (LayoutParams) indicatorView.getLayoutParams();
                 Tab tab = mTabs.get(selectedIndex);
-                switch (indicatorMode){
+                switch (indicatorMode) {
                     case EQUAL_TAB:
                         layoutParams.setMargins(tab.getTabLeft() - scrollX, 0, 0, 0);
                         break;
@@ -118,62 +118,57 @@ public class QuickTabLayout extends LinearLayout {
         selectedIndex = 0;
         llTabContainer.removeAllViews();
         initTabs(tabs);
-        int tabLayoutWidth = computeTabLayoutWidth();
-        if (tabLayoutWidth > screenWidth) {  // 大于屏幕的宽度，不能继续平分了
-            setTabMode(WRAPCONTENT);
-            for (Tab tab : tabs) {
-                llTabContainer.addView(tab.getTextView());
-            }
-        } else {
-            int tabCount = tabs.size();
-            int textViewWidth = 0;
-            switch (tabMode) {
-                case EQUANT:
-                    textViewWidth = screenWidth / tabCount;
-                    for (int i = 0; i < tabCount; i++) {
-                        Tab tab = mTabs.get(i);
-                        tab.setTabWidth(textViewWidth);
-                        llTabContainer.addView(tab.getTextView());
-                        tab.setTabLeft(i * textViewWidth);
-                        tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
-                    }
-                    break;
-                case WRAPCONTENT:
-                    for (int i = 0; i < tabCount; i++) {
-                        Tab tab = mTabs.get(i);
-                        float titleWidth = tab.getIndicatorWidth();
-                        textViewWidth = (int) (titleWidth + dp2px(mContext, 20));
-                        tab.setTabWidth(textViewWidth);
-                        llTabContainer.addView(tab.getTextView());
-                        tab.setTabLeft(i * textViewWidth);
-                        tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
-                    }
-                    if(checkTabTotalWidth()){
-                        setTabs(mTabs);
-                        return;
-                    }
-                    break;
-                case EQUAL:
-                    textViewWidth = tabWidth;
-                    for (int i = 0; i < tabCount; i++) {
-                        Tab tab = mTabs.get(i);
-                        tab.setTabWidth(textViewWidth);
-                        llTabContainer.addView(tab.getTextView());
-                        tab.setTabLeft(i * textViewWidth);
-                        tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
-                    }
-                    if(checkTabTotalWidth()){
-                        setTabs(mTabs);
-                        return;
-                    }
-                    break;
-            }
-            setSelectState();
+        int tabCount = tabs.size();
+        int textViewWidth = 0;
+        switch (tabMode) {
+            case EQUANT: //等分的情况下，过长或者tab过多都不去变换mode，有可能造成死循环
+                textViewWidth = screenWidth / tabCount;
+                for (int i = 0; i < tabCount; i++) {
+                    Tab tab = mTabs.get(i);
+                    tab.setTabWidth(textViewWidth);
+                    llTabContainer.addView(tab.getTextView());
+                    tab.setTabLeft(i * textViewWidth);
+                    tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
+                }
+                break;
+            case WRAPCONTENT:
+                int tabLeft = 0;
+                for (int i = 0; i < tabCount; i++) {
+                    Tab tab = mTabs.get(i);
+                    float titleWidth = tab.getIndicatorWidth();
+                    textViewWidth = (int) (titleWidth + dp2px(mContext, 20));
+                    tab.setTabWidth(textViewWidth);
+                    llTabContainer.addView(tab.getTextView());
+                    tab.setTabLeft(tabLeft);
+                    tab.setIndicatorLeft((tabLeft + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
+                    tabLeft += textViewWidth;
+                }
+                if (checkTabTotalWidth()) {
+                    setTabs(mTabs);
+                    return;
+                }
+                break;
+            case EQUAL:
+                textViewWidth = tabWidth;
+                for (int i = 0; i < tabCount; i++) {
+                    Tab tab = mTabs.get(i);
+                    tab.setTabWidth(textViewWidth);
+                    llTabContainer.addView(tab.getTextView());
+                    tab.setTabLeft(i * textViewWidth);
+                    tab.setIndicatorLeft((i * textViewWidth + ((textViewWidth - tab.getIndicatorWidth()) / 2)));
+                }
+                if (checkTabTotalWidth()) {
+                    setTabs(mTabs);
+                    return;
+                }
+                break;
         }
+        setSelectState();
     }
 
     /**
      * 检查总长度
+     *
      * @return
      */
     private boolean checkTabTotalWidth() {
@@ -181,7 +176,7 @@ public class QuickTabLayout extends LinearLayout {
         for (Tab tab : mTabs) {
             totalWidth += tab.getTabWidth();
         }
-        if(totalWidth < screenWidth){
+        if (totalWidth < screenWidth) {
             tabMode = EQUANT;
             return true;
         }
@@ -217,19 +212,6 @@ public class QuickTabLayout extends LinearLayout {
                 break;
         }
         indicatorView.setLayoutParams(layoutParams);
-    }
-
-    /**
-     * 计算tab是不是超过长度  自动转变mode
-     *
-     * @return
-     */
-    private int computeTabLayoutWidth() {
-        int width = 0;
-        for (Tab mTab : mTabs) {
-            width += mTab.getIndicatorWidth();
-        }
-        return width;
     }
 
     /**
@@ -278,6 +260,9 @@ public class QuickTabLayout extends LinearLayout {
         }
     }
 
+    /**
+     * 检查是否需要滑动
+     */
     private void checkScroll() {
         View view = llTabContainer.getChildAt(selectedIndex);
         int left = view.getLeft();
@@ -294,10 +279,13 @@ public class QuickTabLayout extends LinearLayout {
     private void indicatorAnim(Tab currentTab, Tab previousTab) {
         int scrollX = horizontalScrollView.getScrollX();
         int startValue = 0, endValue = 0;
+        int startWidth = 0, endWidth = 0;
         switch (indicatorMode) {
             case EQUAL_TAB:
                 startValue = previousTab.getTabLeft() - scrollX;
                 endValue = currentTab.getTabLeft() - scrollX;
+                startWidth = previousTab.getIndicatorWidth();
+                endWidth = currentTab.getIndicatorWidth();
                 break;
             case EQUAL_CONTENT:
             case EQUAL_VALUE:
@@ -305,7 +293,7 @@ public class QuickTabLayout extends LinearLayout {
                 endValue = currentTab.getIndicatorLeft() - scrollX;
                 break;
         }
-        ObjectAnimator anim = ObjectAnimator.ofInt(indicatorView, "rjp", startValue, endValue).setDuration(300);
+        ObjectAnimator anim = ObjectAnimator.ofInt(indicatorView, "rjp", startValue, endValue , startWidth, endWidth).setDuration(300);
         anim.start();
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -323,7 +311,7 @@ public class QuickTabLayout extends LinearLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                checkScroll();
+//                checkScroll();
             }
 
             @Override

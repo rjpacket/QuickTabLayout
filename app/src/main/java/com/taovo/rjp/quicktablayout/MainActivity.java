@@ -13,14 +13,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ArrayList<Tab> tabs1 = new ArrayList<>();
-        tabs1.add(new Tab("新闻"));
+        tabs1.add(new Tab("新闻新闻"));
         tabs1.add(new Tab("热点"));
-        tabs1.add(new Tab("视频"));
+        tabs1.add(new Tab("视频视频"));
         tabs1.add(new Tab("体育"));
-        tabs1.add(new Tab("图片"));
-        tabs1.add(new Tab("图片"));
-        tabs1.add(new Tab("图片"));
-        tabs1.add(new Tab("图片"));
+        tabs1.add(new Tab("图片图片"));
         QuickTabLayout quickTabLayout1 = (QuickTabLayout) findViewById(R.id.quick_tab_layout1);
         quickTabLayout1.setTabMode(QuickTabLayout.TabMode.EQUANT);
         quickTabLayout1.setIndicatorMode(QuickTabLayout.IndicatorMode.EQUAL_TAB);
@@ -30,11 +27,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Tab> tabs2 = new ArrayList<>();
         tabs2.add(new Tab("新闻"));
         tabs2.add(new Tab("热点"));
-        tabs2.add(new Tab("视频"));
+        tabs2.add(new Tab("视频视频"));
         tabs2.add(new Tab("体育"));
+        tabs2.add(new Tab("体育体育体育"));
         tabs2.add(new Tab("体育"));
-        tabs2.add(new Tab("体育"));
-        tabs2.add(new Tab("图片"));
         QuickTabLayout quickTabLayout2 = (QuickTabLayout) findViewById(R.id.quick_tab_layout2);
         quickTabLayout2.setTabMode(QuickTabLayout.TabMode.EQUANT);
         quickTabLayout2.setIndicatorMode(QuickTabLayout.IndicatorMode.EQUAL_CONTENT);
@@ -54,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
         quickTabLayout3.setTabs(tabs3);
 
         ArrayList<Tab> tabs4 = new ArrayList<>();
-        tabs4.add(new Tab("新闻"));
-        tabs4.add(new Tab("热点"));
-        tabs4.add(new Tab("视频"));
+        tabs4.add(new Tab("新闻新闻"));
+        tabs4.add(new Tab("热点新"));
+        tabs4.add(new Tab("视频新闻新闻"));
         tabs4.add(new Tab("体育"));
-        tabs4.add(new Tab("图片"));
-        tabs4.add(new Tab("图片"));
-        tabs4.add(new Tab("图片"));
-        tabs4.add(new Tab("图片"));
+        tabs4.add(new Tab("图片新闻新闻新闻新闻"));
+        tabs4.add(new Tab("图片新闻"));
+        tabs4.add(new Tab("图片新闻新闻新闻新闻新闻新闻新闻"));
+        tabs4.add(new Tab("图片新闻"));
         QuickTabLayout quickTabLayout4 = (QuickTabLayout) findViewById(R.id.quick_tab_layout4);
         quickTabLayout4.setTabMode(QuickTabLayout.TabMode.WRAPCONTENT);
         quickTabLayout4.setIndicatorMode(QuickTabLayout.IndicatorMode.EQUAL_TAB);
