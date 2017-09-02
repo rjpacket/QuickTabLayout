@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         tabs2.add(new Tab("热点"));
         tabs2.add(new Tab("视频视频"));
         tabs2.add(new Tab("体育"));
-        tabs2.add(new Tab("体育体育体育"));
+        tabs2.add(new Tab("体育体育"));
         tabs2.add(new Tab("体育"));
         QuickTabLayout quickTabLayout2 = (QuickTabLayout) findViewById(R.id.quick_tab_layout2);
         quickTabLayout2.setTabMode(QuickTabLayout.TabMode.EQUANT);

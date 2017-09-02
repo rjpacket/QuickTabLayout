@@ -118,7 +118,15 @@ public class QuickTabLayout extends LinearLayout {
         selectedIndex = 0;
         llTabContainer.removeAllViews();
         initTabs(tabs);
-        int tabCount = tabs.size();
+        addTabInContainer();
+        setSelectState();
+    }
+
+    /**
+     * 添加Tab进容器
+     */
+    private void addTabInContainer() {
+        int tabCount = mTabs.size();
         int textViewWidth = 0;
         switch (tabMode) {
             case EQUANT: //等分的情况下，过长或者tab过多都不去变换mode，有可能造成死循环
@@ -163,7 +171,6 @@ public class QuickTabLayout extends LinearLayout {
                 }
                 break;
         }
-        setSelectState();
     }
 
     /**
@@ -280,22 +287,27 @@ public class QuickTabLayout extends LinearLayout {
         int scrollX = horizontalScrollView.getScrollX();
         int startValue = 0, endValue = 0;
         int startWidth = 0, endWidth = 0;
+
         switch (indicatorMode) {
             case EQUAL_TAB:
                 startValue = previousTab.getTabLeft() - scrollX;
                 endValue = currentTab.getTabLeft() - scrollX;
-                startWidth = previousTab.getIndicatorWidth();
-                endWidth = currentTab.getIndicatorWidth();
+                startWidth = previousTab.getTabWidth();
+                endWidth = currentTab.getTabWidth();
                 break;
             case EQUAL_CONTENT:
             case EQUAL_VALUE:
                 startValue = previousTab.getIndicatorLeft() - scrollX;
                 endValue = currentTab.getIndicatorLeft() - scrollX;
+                startWidth = previousTab.getIndicatorWidth();
+                endWidth = currentTab.getIndicatorWidth();
                 break;
         }
-        ObjectAnimator anim = ObjectAnimator.ofInt(indicatorView, "rjp", startValue, endValue , startWidth, endWidth).setDuration(300);
-        anim.start();
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ObjectAnimator anim1 = ObjectAnimator.ofInt(indicatorView, "rjp-left", startValue, endValue).setDuration(300);
+        ObjectAnimator anim2 = ObjectAnimator.ofInt(indicatorView, "rjp-width", startWidth, endWidth).setDuration(300);
+        anim1.start();
+        anim2.start();
+        anim1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) indicatorView.getLayoutParams();
@@ -303,7 +315,16 @@ public class QuickTabLayout extends LinearLayout {
                 indicatorView.setLayoutParams(layoutParams);
             }
         });
-        anim.addListener(new Animator.AnimatorListener() {
+        anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) indicatorView.getLayoutParams();
+                int width = (Integer) animation.getAnimatedValue();
+                layoutParams.width = width;
+                indicatorView.setLayoutParams(layoutParams);
+            }
+        });
+        anim1.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -311,7 +332,7 @@ public class QuickTabLayout extends LinearLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-//                checkScroll();
+                checkScroll();
             }
 
             @Override
