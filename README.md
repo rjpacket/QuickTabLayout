@@ -423,4 +423,4 @@ textView.setOnClickListener(new OnClickListener() {
 
 ![image.png](http://upload-images.jianshu.io/upload_images/5994029-932358ffc72d270b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-附上 [GayHub](https://github.com/rjpacket/QuickTabLayout) 地址，感兴趣可以和我肛一波。
+附上 [简书](http://www.jianshu.com/p/5791f1f5391b) 地址，感兴趣可以和我肛一波。
